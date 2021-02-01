@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Booking;
 use App\Http\Requests\BookCreateRequest;
+use Dotenv\Validator;
 
 class BookingController extends Controller
 {
@@ -121,6 +122,6 @@ class BookingController extends Controller
      */
     public function destroy($id)
     {
-        //
+    
     }
 }
