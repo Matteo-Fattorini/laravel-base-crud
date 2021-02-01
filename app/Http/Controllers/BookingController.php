@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Booking;
+use App\Http\Requests\BookCreateRequest;
 
 class BookingController extends Controller
 {
@@ -36,19 +37,24 @@ class BookingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(BookCreateRequest $request)
+    {   
+
+        $validated = $request->validated();
+        // dd($validated);
         $book = new Booking();
-        $book->guest_full_name = $request->input('guest_full_name');
-        $book->room = $request->input("room");
-        $book->guest_credit_card = $request->input("guest_credit_card");
+        $book->guest_full_name = $validated["guest_full_name"];
+        $book->room = $validated["room"];
+        $book->guest_credit_card = $validated["guest_credit_card"];
         $book->from_date = $request->input("from_date");
         $book->to_date = $request->input("to_date");
         $book->more_details = $request->input("more_details");
 
         $book->save();
+
+        $newBook = Booking::orderBy("id", "desc")->first();
+        return redirect()->route("booking.show", $newBook);
         
-        return view("success");
 
     }
 
@@ -72,7 +78,14 @@ class BookingController extends Controller
      */
     public function edit($id)
     {
-        //
+        $details = Booking::find($id);
+        $details["from_date"] = strtotime($details["from_date"]);
+        $details["from_date"] = date('Y-m-d', $details["from_date"]);
+        $details["to_date"] = strtotime($details["to_date"]);
+        $details["to_date"] = date('Y-m-d', $details["to_date"]);
+        
+        
+        return view("edit",compact("details"));
     }
 
     /**
@@ -82,9 +95,22 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BookCreateRequest $request, $id)
     {
+        $validated = $request->validated();
         
+        $book = Booking::find($id);
+        $book->guest_full_name = $validated["guest_full_name"];
+        $book->room = $validated["room"];
+        $book->guest_credit_card = $validated["guest_credit_card"];
+        $book->from_date = $request->input("from_date");
+        $book->to_date = $request->input("to_date");
+        $book->more_details = $request->input("more_details");
+
+        $book->save();
+
+        return redirect()->route("booking.index");
+
     }
 
     /**

@@ -12,6 +12,7 @@
                 <h6 class="card-subtitle mb-2 text-muted">Stanza n° {{ $book["room"] }}</h6>
                 <p class="card-text">{{ $book["more_details"] }}</p>
                 <a href="{{ route("booking.show",$book["id"]) }}" class="card-link">Reservation Details</a>
+                <a href="{{ route("booking.edit",$book["id"]) }}" class="card-link">Modifica</a>
                 
                 </div>
                 </div>
